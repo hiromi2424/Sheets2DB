@@ -3,3 +3,6 @@
 /plugins
 /vendors
 /cake
+/vendors/zend_framework
+/app/vendors/zend_framework
+
