@@ -34,3 +34,10 @@ Install ZendFramework:
 - Access your installed web site.
 - Enter Google authentication.
 - Go to top and enter your sheet name.
+
+## Others ##
+
+There is simple sheet sample/template.
+
+https://spreadsheets.google.com/ccc?key=0AiRFuqJUfgPMdF9zby1Oc3hfNEE2QjZmYnY2WkJ3Q0E&hl=ja
+
