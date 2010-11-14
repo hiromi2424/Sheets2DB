@@ -22,7 +22,7 @@
 <head>
 	<?php echo $this->Html->charset(); ?>
 	<title>
-		<?php __('sheets2db'); ?>
+		<?php __('Sheets2DB'); ?>
 		<?php echo $title_for_layout; ?>
 	</title>
 	<?php
@@ -36,11 +36,12 @@
 <body>
 	<div id="container">
 		<div id="header">
-			<h1><?php echo $this->Html->link(__('sheets2db', true), '/'); ?></h1>
+			<h1><?php echo $this->Html->link(__('Sheets2DB', true), '/'); ?></h1>
 		</div>
 		<div id="navi" style="background-color: #ffffff; border-bottom: 1px solid #006666">
 			<ul>
-				<li><?php echo $this->Html->link('Configuration', array('action' => 'config')) ?></li>
+				<li><?php echo $this->Html->link(__('Index', true), array('action' => 'index')) ?></li>
+				<li><?php echo $this->Html->link(__('Configuration', true), array('action' => 'config')) ?></li>
 			</ul>
 		</div>
 		<div id="content">

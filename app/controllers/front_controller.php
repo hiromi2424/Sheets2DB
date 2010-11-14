@@ -37,6 +37,8 @@ class FrontController extends AppController {
 
 		$this->destination = $destination;
 
+		$gdata_start = microtime(true);
+
 		$client = new Zend_Gdata_SpreadSheets($this->gdata_client);
 		$feed = $client->getSpreadsheetFeed();
 		$search = $this->destination;
@@ -96,6 +98,8 @@ class FrontController extends AppController {
 			}
 			$tables[$worksheetName] = $table;
 		}
+		$this->set('gdata_elapsed_time', microtime(true) - $gdata_start);
+		$database_start = microtime(true);
 
 		App::import('Model', 'ConnectionManager');
 		$db =& ConnectionManager::getDataSource('default');
@@ -159,6 +163,8 @@ class FrontController extends AppController {
 		}
 		$result = $db->query('SET FOREIGN_KEY_CHECKS=1');
 		$this->_incrementSuccess($result);
+
+		$this->set('database_elapsed_time', microtime(true) - $database_start);
 
 		$this->set('countSuccessTables', $this->_countSuccessTables);
 		$this->set('countSuccessQueries', $this->_countSuccessQueries);

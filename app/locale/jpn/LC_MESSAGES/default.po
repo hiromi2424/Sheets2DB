@@ -1,0 +1,83 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2010-11-15 00:38+0900\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: \app_controller.php:33
+msgid "Failed Authentication"
+msgstr "認証に失敗"
+
+#: \views\front\config.ctp:1
+msgid "Configuration"
+msgstr "設定"
+
+#: \views\front\config.ctp:5
+msgid "Enter your google acount"
+msgstr "Googleアカウント名を入力してください"
+
+#: \views\front\config.ctp:6
+msgid "Enter your google password"
+msgstr "Googleアカウントのパスワードを入力してください"
+
+#: \views\front\config.ctp:7
+#: \views\front\index.ctp:6
+msgid "submit"
+msgstr "送信"
+
+#: \views\front\index.ctp:1
+msgid "Index"
+msgstr "トップ"
+
+#: \views\front\index.ctp:5
+msgid "Enter name of spread sheet to import"
+msgstr "インポートするスプレッドシートの名称を入力してください"
+
+#: \views\front\process.ctp:1
+msgid "Results"
+msgstr "結果"
+
+#: \views\front\process.ctp:3
+msgid "Communication with Google"
+msgstr "Google通信時間"
+
+#: \views\front\process.ctp:4;7
+msgid "%.1f seconds"
+msgstr "%.1f秒"
+
+#: \views\front\process.ctp:6
+msgid "Communication with database"
+msgstr "DB処理時間"
+
+#: \views\front\process.ctp:11
+msgid "Created Tables"
+msgstr "テーブル作成"
+
+#: \views\front\process.ctp:14
+msgid "Executed Queries"
+msgstr "発行されたクエリ"
+
+#: \views\layouts\default.ctp:25;39
+msgid "sheets2db"
+msgstr ""
+
+#: \views\layouts\default.ctp:55
+msgid "CakePHP: the rapid development php framework"
+msgstr "CakePHP: 高速開発PHPフレームワーク"
+
+#: \webroot\test.php:88
+msgid "Debug setting does not allow access to this url."
+msgstr "デバッグ設定によりこのURLにアクセスできません。"
+
+
+

@@ -7,6 +7,8 @@ class AppController extends Controller {
 	var $auth_failed = false;
 
 	function beforeFilter() {
+		$this->disableCache();
+
 		if (!$this->_loadConfig()) {
 			$this->configured = false;
 			return;
@@ -28,10 +30,9 @@ class AppController extends Controller {
 			$this->gdata_token = $cre->getCaptchaToken();
 			var_dump($this->gdata_capthaUrl, $this->gdata_token);
 		} catch (Zend_Gdata_App_AuthException $ae) {
-			$this->Session->setFlash('認証に失敗: ' . $ae->exception());
+			$this->Session->setFlash(__('Failed Authentication', true) . ':' . $ae->exception());
 			$this->auth_failed = true;
 		}
-		$this->disableCache();
 	}
 
 	function _storeConfig($type, $data) {
