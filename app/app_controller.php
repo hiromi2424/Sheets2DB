@@ -14,7 +14,6 @@ class AppController extends Controller {
 		$this->gdata_login = Configure::read('Gdata.login');
 
 		ini_set('include_path', get_include_path() . PATH_SEPARATOR . VENDORS . 'zend_framework' . DS . 'library' . PATH_SEPARATOR . APP . DS . 'vendors' . DS . 'zend_framework' . DS . 'library');
-		var_dump(get_include_path());
 		require_once('Zend/Loader.php');
 		Zend_Loader::loadClass('Zend_Gdata');
 		Zend_Loader::loadClass('Zend_Gdata_ClientLogin');
