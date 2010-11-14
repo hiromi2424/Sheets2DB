@@ -112,7 +112,7 @@ class FrontController extends AppController {
 				$fieldDef = '`' . $row[2] . '` ';
 				$fieldDef .= $this->_getType($row[3]);
 				$fieldDef .= $this->_getNull($row[4], $this->_getType($row[3]));
-				if (!empty($row[5])) {
+				if (isset($row[5])) {
 					$fieldDef .= $this->_getDefault($row[5]);
 				}
 				if (!empty($row[6])) {
