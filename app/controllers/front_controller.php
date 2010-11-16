@@ -126,9 +126,12 @@ class FrontController extends AppController {
 					$fieldDef .= $this->_getComment($row[7]);
 				}
 				if (!empty($row[1])) {
-					if (trim($row[1]) == 'primary') {
-						$fieldDef .= 'primary key ';
-					} elseif (trim($row[1]) == 'foreign') {
+					$index = strtolower(trim($row[1]);
+					if ($index) == 'primary') {
+						$fieldDef .= 'PRIMARY KEY ';
+					} elseif ($index == 'unique') {
+						$fieldDef .= 'unique ';
+					} elseif ($index == 'foreign') {
 						$parts = explode('_', $row[2]);
 						array_pop($parts);
 						array_push($parts, Inflector::pluralize(array_pop($parts)));
