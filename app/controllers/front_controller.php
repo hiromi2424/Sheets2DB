@@ -126,12 +126,12 @@ class FrontController extends AppController {
 					$fieldDef .= $this->_getComment($row[7]);
 				}
 				if (!empty($row[1])) {
-					$index = strtolower(trim($row[1]);
-					if ($index) == 'primary') {
+					$colmun_index = strtolower(trim($row[1]));
+					if ($colmun_index == 'primary') {
 						$fieldDef .= 'PRIMARY KEY ';
-					} elseif ($index == 'unique') {
+					} elseif ($colmun_index == 'unique') {
 						$fieldDef .= 'unique ';
-					} elseif ($index == 'foreign') {
+					} elseif ($colmun_index == 'foreign') {
 						$parts = explode('_', $row[2]);
 						array_pop($parts);
 						array_push($parts, Inflector::pluralize(array_pop($parts)));
@@ -140,7 +140,7 @@ class FrontController extends AppController {
 							$ref .= '.id';
 						}
 						$foreignKeys[$row[2]] = $ref;
-					} elseif (preg_match('/foreign\((.+?)\)/', $row[1], $matche)) {
+					} elseif (preg_match('/foreign\((.+?)\)/', $colmun_index, $matche)) {
 						$ref = $matche[1];
 						if (strpos($ref, '.') === false) {
 							$ref .= '.id';
