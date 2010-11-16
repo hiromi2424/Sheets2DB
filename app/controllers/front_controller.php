@@ -177,23 +177,26 @@ class FrontController extends AppController {
 	function _getType($type) {
 		$type = strtolower(trim($type));
 		if ($type == 'int') {
-			return 'int unsigned ';
+			return 'INT UNSIGNED ';
 		}
 		if ($type == 'bool') {
-			return 'tinyint(1) ';
+			return 'TINYINT(1) ';
 		}
 		if (preg_match('/char\((.+?)\)/', $type, $matche)) {
 			$length = $matche[1];
-			return "varchar($length) ";
+			return "VARCHAR($length) ";
 		}
 		if (preg_match('/float\((.+?)\)/', $type, $matche)) {
 			return "$type ";
 		}
 		if ($type == 'text') {
-			return 'text ';
+			return 'TEXT ';
 		}
 		if ($type == 'datetime') {
-			return 'datetime ';
+			return 'DATETIME ';
+		}
+		if ($type == 'blob' || $type == 'binary') {
+			return 'BLOB ';
 		}
 		trigger_error('No valid type specified ' . $type);
 		return 'undefined ';
