@@ -198,6 +198,9 @@ class FrontController extends AppController {
 		if ($type == 'blob' || $type == 'binary') {
 			return 'BLOB ';
 		}
+		if (strpos($type, 'text') !== false || strpos($type, 'blob') !== false) {
+			return strtoupper($type) . ' ';
+		}
 		trigger_error('No valid type specified ' . $type);
 		return 'undefined ';
 	}
