@@ -179,7 +179,7 @@ class FrontController extends AppController {
 		if ($type == 'int') {
 			return 'INT UNSIGNED ';
 		}
-		if ($type == 'bool') {
+		if ($type == 'bool' || $type == 'boolean') {
 			return 'TINYINT(1) ';
 		}
 		if (preg_match('/char\((.+?)\)/', $type, $matche)) {
