@@ -112,6 +112,7 @@ class FrontController extends AppController {
 			$this->_incrementSuccess($result);
 			$sql = 'CREATE TABLE IF NOT EXISTS `' . trim($name) . "` (\n";
 			$fieldDefs = $foreignKeys = array();
+			$records = array();
 			foreach ($table as $index => $row) {
 				$fieldDef = '`' . $row[2] . '` ';
 				$fieldDef .= $this->_getType($row[3]);
@@ -149,6 +150,10 @@ class FrontController extends AppController {
 					}
 				}
 				$fieldDefs[$index] = $fieldDef;
+
+				if (!empty($row[9])) {
+					$records[$row[2]] = $this->_getRecordRow($row);
+				}
 			}
 			$sql .= implode(",\n", $fieldDefs);
 			if (!empty($foreignKeys)) {
@@ -163,6 +168,21 @@ class FrontController extends AppController {
 			$result = $db->query($sql);
 			$this->_incrementSuccess($result);
 			$this->_incrementCreateTableSuccess($result);
+
+			if (!empty($records)) {
+				$fields = array_keys($records);
+				$recordsDef = array();
+				foreach ($records as $field => $values) {
+					foreach ($values as $index => $value) {
+						$recordsDef[$index][array_search($field, $fields)] = $value;
+					}
+				}
+
+				foreach ($recordsDef as $index => $values) {
+					$recordsDef[$index] = '(' . implode(', ', $recordsDef[$index]) . ')';
+				}
+				$db->insertMulti(trim($name), $fields, $recordsDef);
+			}
 		}
 		$result = $db->query('SET FOREIGN_KEY_CHECKS=1');
 		$this->_incrementSuccess($result);
@@ -243,6 +263,27 @@ class FrontController extends AppController {
 		if ($result) {
 			$this->_countSuccessTables ++;
 		}
+	}
+
+	function _getRecordRow($row) {
+		$result = array();
+		$type = $this->_getType($row[3]);
+		for ($i = 9; !empty($row[$i]); $i++) {
+			$value = $row[$i];
+			switch (true) {
+				case $type == 'TINYINT(1) ':
+				case $type == 'INT UNSIGNED ':
+				case preg_match('/float\((.+?)\)/', $type):
+				case $value == 'null':
+					break;
+				case $value == 'now':
+					$value = 'now()';
+				default:
+					$value = "'$value'";
+			}
+			$result[] = $value;
+		}
+		return $result;
 	}
 
 	function _debug($object) {
