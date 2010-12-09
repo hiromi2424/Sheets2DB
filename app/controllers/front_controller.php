@@ -278,6 +278,7 @@ class FrontController extends AppController {
 					break;
 				case $value == 'now':
 					$value = 'now()';
+					break;
 				default:
 					$value = "'$value'";
 			}
