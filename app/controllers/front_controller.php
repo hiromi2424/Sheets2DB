@@ -151,7 +151,7 @@ class FrontController extends AppController {
 				}
 				$fieldDefs[$index] = $fieldDef;
 
-				if (!empty($row[9])) {
+				if (isset($row[9])) {
 					$records[$row[2]] = $this->_getRecordRow($row);
 				}
 			}
@@ -268,7 +268,7 @@ class FrontController extends AppController {
 	function _getRecordRow($row) {
 		$result = array();
 		$type = $this->_getType($row[3]);
-		for ($i = 9; !empty($row[$i]); $i++) {
+		for ($i = 9; isset($row[$i]); $i++) {
 			$value = $row[$i];
 			switch (true) {
 				case $type == 'TINYINT(1) ':
