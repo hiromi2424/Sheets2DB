@@ -132,6 +132,8 @@ class FrontController extends AppController {
 						$fieldDef .= 'PRIMARY KEY ';
 					} elseif ($colmun_index == 'unique') {
 						$fieldDef .= 'unique ';
+					} elseif ($colmun_index == 'index') {
+						$fieldDef .= 'index ';
 					} elseif ($colmun_index == 'foreign') {
 						$parts = explode('_', $row[2]);
 						array_pop($parts);
