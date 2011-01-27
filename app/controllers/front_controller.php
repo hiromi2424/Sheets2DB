@@ -111,7 +111,7 @@ class FrontController extends AppController {
 			$result = $db->query("DROP TABLE IF EXISTS `$name`");
 			$this->_incrementSuccess($result);
 			$sql = 'CREATE TABLE IF NOT EXISTS `' . trim($name) . "` (\n";
-			$fieldDefs = $foreignKeys = array();
+			$fieldDefs = $foreignKeys = $indexColmuns = array();
 			$records = array();
 			foreach ($table as $index => $row) {
 				$fieldDef = '`' . $row[2] . '` ';
@@ -131,9 +131,9 @@ class FrontController extends AppController {
 					if ($colmun_index == 'primary') {
 						$fieldDef .= 'PRIMARY KEY ';
 					} elseif ($colmun_index == 'unique') {
-						$fieldDef .= 'unique ';
+						$fieldDef .= ' UNIQUE ';
 					} elseif ($colmun_index == 'index') {
-						$fieldDef .= 'index ';
+						$indexColmuns[] = $row[2];
 					} elseif ($colmun_index == 'foreign') {
 						$parts = explode('_', $row[2]);
 						array_pop($parts);
@@ -166,6 +166,15 @@ class FrontController extends AppController {
 				}
 				$sql .= implode(",\n", $foreignKeys);
 			}
+
+			if (!empty($indexColmuns)) {
+				$sql .= ",\n";
+				foreach ($indexColmuns as $i => $colmun) {
+					$indexColmuns[$i] = " INDEX (`$colmun`) ";
+				}
+				$sql .= implode(",\n", $indexColmuns);
+			}
+
 			$sql .= ") ENGINE=InnoDB  DEFAULT CHARSET=utf8";
 			$result = $db->query($sql);
 			$this->_incrementSuccess($result);
