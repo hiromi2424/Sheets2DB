@@ -237,7 +237,7 @@ class FrontController extends AppController {
 	}
 
 	function _getNull($null, $type) {
-		if ($null == 'no' && $type !== 'text') {
+		if ($null == 'no' && !preg_match('/(text|blob)/i', $type)) {
 			return 'NOT NULL ';
 		}
 		return '';
