@@ -232,6 +232,9 @@ class FrontController extends AppController {
 		if (strpos($type, 'text') !== false || strpos($type, 'blob') !== false) {
 			return strtoupper($type) . ' ';
 		}
+		if (strpos($type, 'date') !== false || strpos($type, 'time') !== false) {
+			return strtoupper($type) . ' ';
+		}
 		trigger_error('No valid type specified ' . $type);
 		return 'undefined ';
 	}
