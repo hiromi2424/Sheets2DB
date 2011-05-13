@@ -8,6 +8,15 @@ class FrontController extends AppController {
 	var $_countQueries = 0;
 	var $_countSuccessTables = 0;
 
+	const NAME = 1;
+	const TYPE = 2;
+	const INDEX = 3;
+	const NIL = 4;
+	const DEFAULTS = 5;
+	const OTHERS = 6;
+	const COMMENT = 7;
+	const RECORD_START = 10;
+
 	function index() {
 		if (!$this->configured) {
 			$this->redirect(array('action' => 'config'));
@@ -78,26 +87,20 @@ class FrontController extends AppController {
 				$row = $cellEntry->cell->row;
 				$col = $cellEntry->cell->col;
 
-				if ($row < 3) {
+				if ($col == 1) {
 					continue;
 				}
 
-				$table[$row][$col] = $text;
+				$table[$col][$row] = $text;
 			}
-			
-			if (empty($table[3][2])) {
-				continue;
-			}
-			foreach ($table as $index => $row) {
-				if (empty($row[2])) {
-					unset($table[$index]);
-				}
-			}
+
 			if (empty($table)) {
 				continue;
 			}
 			$tables[$worksheetName] = $table;
 		}
+
+
 		$this->set('gdata_elapsed_time', microtime(true) - $gdata_start);
 		$database_start = microtime(true);
 
@@ -113,50 +116,53 @@ class FrontController extends AppController {
 			$sql = 'CREATE TABLE IF NOT EXISTS `' . trim($name) . "` (\n";
 			$fieldDefs = $foreignKeys = $indexColmuns = array();
 			$records = array();
+
 			foreach ($table as $index => $row) {
-				$fieldDef = '`' . $row[2] . '` ';
-				$fieldDef .= $this->_getType($row[3]);
-				$fieldDef .= $this->_getNull($row[4], $this->_getType($row[3]));
-				if (isset($row[5])) {
-					$fieldDef .= $this->_getDefault($row[5]);
+				$fieldDef = '`' . $row[self::NAME] . '` ';
+				$fieldDef .= $this->_getType($row[self::TYPE]);
+				$fieldDef .= $this->_getNull($row[self::NIL], $this->_getType($row[self::TYPE]));
+				if (isset($row[self::DEFAULTS])) {
+					$fieldDef .= $this->_getDefault($row[self::DEFAULTS]);
 				}
-				if (!empty($row[6])) {
-					$fieldDef .= $this->_getOthers($row[6]);
+				if (!empty($row[self::OTHERS])) {
+					$fieldDef .= $this->_getOthers($row[self::OTHERS]);
 				}
-				if (!empty($row[7])) {
-					$fieldDef .= $this->_getComment($row[7]);
+				if (!empty($row[self::COMMENT])) {
+					$fieldDef .= $this->_getComment($row[self::COMMENT]);
 				}
-				if (!empty($row[1])) {
-					$colmun_index = strtolower(trim($row[1]));
+
+				if (!empty($row[self::INDEX])) {
+					$colmun_index = strtolower(trim($row[self::INDEX]));
 					if ($colmun_index == 'primary') {
 						$fieldDef .= 'PRIMARY KEY ';
 					} elseif ($colmun_index == 'unique') {
 						$fieldDef .= ' UNIQUE ';
 					} elseif ($colmun_index == 'index') {
-						$indexColmuns[] = $row[2];
+						$indexColmuns[] = $row[self::NAME];
 					} elseif ($colmun_index == 'foreign') {
-						$parts = explode('_', $row[2]);
+						$parts = explode('_', $row[self::NAME]);
 						array_pop($parts);
 						array_push($parts, Inflector::pluralize(array_pop($parts)));
 						$ref = implode('_', $parts);
 						if (strpos($ref, '.') === false) {
 							$ref .= '.id';
 						}
-						$foreignKeys[$row[2]] = $ref;
+						$foreignKeys[$row[self::NAME]] = $ref;
 					} elseif (preg_match('/foreign\((.+?)\)/', $colmun_index, $matche)) {
 						$ref = $matche[1];
 						if (strpos($ref, '.') === false) {
 							$ref .= '.id';
 						}
-						$foreignKeys[$row[2]] = $ref;
+						$foreignKeys[$row[self::NAME]] = $ref;
 					}
 				}
 				$fieldDefs[$index] = $fieldDef;
 
-				if (isset($row[9])) {
-					$records[$row[2]] = $this->_getRecordRow($row);
+				if (isset($row[self::RECORD_START])) {
+					$records[$row[self::NAME]] = $this->_getRecordRow($row);
 				}
 			}
+
 			$sql .= implode(",\n", $fieldDefs);
 			if (!empty($foreignKeys)) {
 				$sql .= ",\n";
@@ -281,8 +287,8 @@ class FrontController extends AppController {
 
 	function _getRecordRow($row) {
 		$result = array();
-		$type = $this->_getType($row[3]);
-		for ($i = 9; isset($row[$i]); $i++) {
+		$type = $this->_getType($row[self::TYPE]);
+		for ($i = self::RECORD_START; isset($row[$i]); $i++) {
 			$value = $row[$i];
 			switch (true) {
 				case $type == 'TINYINT(1) ':
