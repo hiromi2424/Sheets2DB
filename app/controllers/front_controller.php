@@ -294,7 +294,7 @@ class FrontController extends AppController {
 					$value = 'now()';
 					break;
 				default:
-					$value = "'$value'";
+					$value = ConnectionManager::getDataSource('default')->value($value);
 			}
 			$result[] = $value;
 		}
