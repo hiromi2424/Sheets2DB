@@ -39,5 +39,5 @@ Install ZendFramework:
 
 There is simple sheet sample/template.
 
-https://spreadsheets.google.com/ccc?key=0AiRFuqJUfgPMdF9zby1Oc3hfNEE2QjZmYnY2WkJ3Q0E&hl=ja
+https://spreadsheets.google.com/ccc?key=0AiRFuqJUfgPMdFI2UEVnNmZUOWs2NThWWnVlNUxTeGc&hl=ja&authkey=COKh6JEB
 
