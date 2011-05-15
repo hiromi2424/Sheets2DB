@@ -15,7 +15,7 @@ class FrontController extends AppController {
 	const DEFAULTS = 5;
 	const OTHERS = 6;
 	const COMMENT = 7;
-	const RECORD_START = 10;
+	const RECORD_START = 9;
 
 	function index() {
 		if (!$this->configured) {
