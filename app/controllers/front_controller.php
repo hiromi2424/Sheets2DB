@@ -216,6 +216,10 @@ class FrontController extends AppController {
 		if ($type == 'int') {
 			return 'INT UNSIGNED ';
 		}
+		if (preg_match('/int\((.+?)\)/', $type, $matche)) {
+			$length = $matche[1];
+			return "INT($length) UNSIGNED ";
+		}
 		if ($type == 'bool' || $type == 'boolean') {
 			return 'TINYINT(1) ';
 		}
