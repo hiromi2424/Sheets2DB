@@ -111,9 +111,10 @@ class FrontController extends AppController {
 
 		$this->set('countTables', count($tables));
 		foreach ($tables as $name => $table) {
-			$result = $db->query("DROP TABLE IF EXISTS `$name`");
+			$_name = $db->config['prefix'] . $name;
+			$result = $db->query("DROP TABLE IF EXISTS `$_name`");
 			$this->_incrementSuccess($result);
-			$sql = 'CREATE TABLE IF NOT EXISTS `' . trim($name) . "` (\n";
+			$sql = 'CREATE TABLE IF NOT EXISTS `' . trim($_name) . "` (\n";
 			$fieldDefs = $foreignKeys = $indexColmuns = array();
 			$records = array();
 
