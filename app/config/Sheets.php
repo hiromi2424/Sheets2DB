@@ -1,7 +1,6 @@
 <?php
 
-$config['Sheets.settings'] = array(
+$config['Sheets']['settings'] = array(
 	'cipher' => 'something', // set string to encrypt password
 );
-
 
