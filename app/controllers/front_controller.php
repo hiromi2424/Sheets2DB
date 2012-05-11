@@ -24,8 +24,12 @@ class FrontController extends AppController {
 
 		if (!empty($this->data)) {
 			$destination = rawurlencode($this->data['destination']);
-			$this->redirect(array('action' => 'process', $destination));
+			$database = !empty($this->data['database']) ? $this->data['database'] : null;
+			$this->redirect(array('action' => 'process', $destination, $database));
 		}
+
+		$databases = Configure::read('Sheets.databases');
+		$this->set(compact('databases'));
 	}
 
 	function config() {
@@ -39,7 +43,7 @@ class FrontController extends AppController {
 		$this->set('password', Configure::read('Gdata.login.password'));
 	}
 
-	function process($destination) {
+	function process($destination, $database = 'default') {
 		if (!$this->configured) {
 			$this->redirect(array('action' => 'config'));
 		}
@@ -61,7 +65,9 @@ class FrontController extends AppController {
 		}
 
 		if ($spreadsheetKey === null) {
-			die('見つからないよ。');
+			$this->Session->setFlash(__('Google Spreadsheet not found', true));
+			$this->redirect(array('action' => 'index'));
+			return;
 		}
 
 		$query = new Zend_Gdata_Spreadsheets_DocumentQuery();
@@ -105,7 +111,7 @@ class FrontController extends AppController {
 		$database_start = microtime(true);
 
 		App::import('Model', 'ConnectionManager');
-		$db =& ConnectionManager::getDataSource('default');
+		$db =& ConnectionManager::getDataSource($database);
 		$result = $db->query('SET FOREIGN_KEY_CHECKS=0');
 		$this->_incrementSuccess($result);
 
