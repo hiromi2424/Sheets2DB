@@ -3,6 +3,7 @@
 class FrontController extends AppController {
 	var $uses = array();
 	var $destination = null;
+	var $db = null;
 
 	var $_countSuccessQueries = 0;
 	var $_countQueries = 0;
@@ -24,8 +25,12 @@ class FrontController extends AppController {
 
 		if (!empty($this->data)) {
 			$destination = rawurlencode($this->data['destination']);
-			$this->redirect(array('action' => 'process', $destination));
+			$database = !empty($this->data['database']) ? $this->data['database'] : null;
+			$this->redirect(array('action' => 'process', $destination, $database));
 		}
+
+		$databases = Configure::read('Sheets.databases');
+		$this->set(compact('databases'));
 	}
 
 	function config() {
@@ -39,7 +44,7 @@ class FrontController extends AppController {
 		$this->set('password', Configure::read('Gdata.login.password'));
 	}
 
-	function process($destination) {
+	function process($destination, $database = 'default') {
 		if (!$this->configured) {
 			$this->redirect(array('action' => 'config'));
 		}
@@ -61,7 +66,9 @@ class FrontController extends AppController {
 		}
 
 		if ($spreadsheetKey === null) {
-			die('見つからないよ。');
+			$this->Session->setFlash(__('Google Spreadsheet not found', true));
+			$this->redirect(array('action' => 'index'));
+			return;
 		}
 
 		$query = new Zend_Gdata_Spreadsheets_DocumentQuery();
@@ -105,14 +112,14 @@ class FrontController extends AppController {
 		$database_start = microtime(true);
 
 		App::import('Model', 'ConnectionManager');
-		$db =& ConnectionManager::getDataSource('default');
-		$result = $db->query('SET FOREIGN_KEY_CHECKS=0');
+		$this->db =& ConnectionManager::getDataSource($database);
+		$result = $this->db->query('SET FOREIGN_KEY_CHECKS=0');
 		$this->_incrementSuccess($result);
 
 		$this->set('countTables', count($tables));
 		foreach ($tables as $name => $table) {
-			$_name = $db->config['prefix'] . $name;
-			$result = $db->query("DROP TABLE IF EXISTS `$_name`");
+			$_name = $this->db->config['prefix'] . $name;
+			$result = $this->db->query("DROP TABLE IF EXISTS `$_name`");
 			$this->_incrementSuccess($result);
 			$sql = 'CREATE TABLE IF NOT EXISTS `' . trim($_name) . "` (\n";
 			$fieldDefs = $foreignKeys = $indexColmuns = array();
@@ -183,7 +190,7 @@ class FrontController extends AppController {
 			}
 
 			$sql .= ") ENGINE=InnoDB  DEFAULT CHARSET=utf8";
-			$result = $db->query($sql);
+			$result = $this->db->query($sql);
 			$this->_incrementSuccess($result);
 			$this->_incrementCreateTableSuccess($result);
 
@@ -199,10 +206,10 @@ class FrontController extends AppController {
 				foreach ($recordsDef as $index => $values) {
 					$recordsDef[$index] = '(' . implode(', ', $recordsDef[$index]) . ')';
 				}
-				$db->insertMulti(trim($name), $fields, $recordsDef);
+				$this->db->insertMulti(trim($name), $fields, $recordsDef);
 			}
 		}
-		$result = $db->query('SET FOREIGN_KEY_CHECKS=1');
+		$result = $this->db->query('SET FOREIGN_KEY_CHECKS=1');
 		$this->_incrementSuccess($result);
 
 		$this->set('database_elapsed_time', microtime(true) - $database_start);
@@ -305,7 +312,7 @@ class FrontController extends AppController {
 					$value = 'now()';
 					break;
 				default:
-					$value = ConnectionManager::getDataSource('default')->value($value);
+					$value = $this->db->value($value);
 			}
 			$result[] = $value;
 		}
