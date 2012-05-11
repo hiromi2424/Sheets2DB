@@ -39,6 +39,9 @@ class AppController extends Controller {
 		$content = "<?php\n";
 
 		foreach ($data as $key => $value) {
+			if ($key === 'password') {
+				$this->_cipher($value);
+			}
 			$content .= "\$config['Gdata']['$type']['$key'] = " . var_export($value, true) . ";\n";
 		}
 
@@ -50,7 +53,27 @@ class AppController extends Controller {
 			return false;
 		}
 		include_once(TMP . 'gdata_config.php');
+		if (!empty($config['Gdata']['login']['password'])) {
+			$this->_cipher($config['Gdata']['login']['password']);
+		}
 		Configure::write($config);
 		return true;
 	}
+
+	function _cipher(&$string) {
+		$cipher = Configure::read('Sheets.settings.cipher');
+		if (!empty($cipher)) {
+			$cipher = 'Sheets.cipher.' . $cipher;
+			$len = strlen($cipher);
+			if (substr($string, 0, $len) === $cipher) {
+				$string = substr($string, $len);
+				$string = Security::cipher(base64_decode($string), $cipher);
+			} else {
+				$string = Security::cipher($string, $cipher);
+				$string = $cipher . base64_encode($string);
+			}
+		}
+		return $string;
+	}
+
 }
