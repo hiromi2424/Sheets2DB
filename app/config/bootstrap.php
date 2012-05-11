@@ -48,3 +48,5 @@
  * Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
  *
  */
+
+Configure::load('Sheets');
