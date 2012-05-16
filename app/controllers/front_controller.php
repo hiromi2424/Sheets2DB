@@ -37,7 +37,7 @@ class FrontController extends AppController {
 		if (!empty($this->data['email']) && !empty($this->data['password'])) {
 			$this->_storeConfig('login', $this->data);
 			
-			$this->redirect(array('action' => 'config'));
+			$this->redirect(array('action' => 'index'));
 		}
 
 		$this->set('email', Configure::read('Gdata.login.email'));
