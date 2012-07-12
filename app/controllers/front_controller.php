@@ -238,23 +238,36 @@ class FrontController extends AppController {
 		if (preg_match('/float\((.+?)\)/', $type, $matche)) {
 			return "$type ";
 		}
-		if ($type == 'text') {
-			return 'TEXT ';
+
+		if (strtolower($type) === 'binary') {
+			$type = 'blob';
 		}
-		if ($type == 'datetime') {
-			return 'DATETIME ';
+
+		$detected = false;
+		if (in_array(strtolower($type), array(
+			'text',
+			'blob',
+			'datetime',
+			'float',
+		))) {
+			$detected = true;
 		}
-		if ($type == 'blob' || $type == 'binary') {
-			return 'BLOB ';
+
+		foreach (array(
+			'text',
+			'blob',
+			'date',
+			'time',
+		) as $typePattern) {
+			if (strpos($type, $typePattern) !== false) {
+				$detected = true;
+			}
 		}
-		if (strpos($type, 'text') !== false || strpos($type, 'blob') !== false) {
-			return strtoupper($type) . ' ';
+
+		if (!$detected) {
+			trigger_error('No valid type specified ' . $type);
 		}
-		if (strpos($type, 'date') !== false || strpos($type, 'time') !== false) {
-			return strtoupper($type) . ' ';
-		}
-		trigger_error('No valid type specified ' . $type);
-		return 'undefined ';
+		return strtoupper($type) . ' ';
 	}
 
 	function _getNull($null, $type) {
@@ -306,10 +319,12 @@ class FrontController extends AppController {
 				case $type == 'TINYINT(1) ':
 				case $type == 'INT UNSIGNED ':
 				case preg_match('/float\((.+?)\)/', $type):
-				case $value == 'null':
 					break;
 				case $value == 'now':
 					$value = 'now()';
+					break;
+				case strtolower($value) == 'null':
+					$value = 'NULL';
 					break;
 				default:
 					$value = $this->db->value($value);
