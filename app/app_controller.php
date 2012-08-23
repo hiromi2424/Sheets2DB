@@ -11,12 +11,20 @@ class AppController extends Controller {
 
 		if (!$this->_loadConfig()) {
 			$this->configured = false;
-			return;
 		}
 		$this->gdata_login = Configure::read('Gdata.login');
 
 		ini_set('include_path', get_include_path() . PATH_SEPARATOR . VENDORS . 'zend_framework' . DS . 'library' . PATH_SEPARATOR . APP . DS . 'vendors' . DS . 'zend_framework' . DS . 'library');
-		require_once('Zend/Loader.php');
+		try {
+			if (! @include_once('Zend/Loader.php')) {
+				throw new Exception ('ZendFramework does not exist');
+			}
+		} catch (Exception $e) {
+			Configure::write('emptyZend', true);
+		}
+		if (!$this->configured || Configure::read('emptyZend')) {
+			return;
+		}
 		Zend_Loader::loadClass('Zend_Gdata');
 		Zend_Loader::loadClass('Zend_Gdata_ClientLogin');
 		Zend_Loader::loadClass('Zend_Gdata_Spreadsheets');
