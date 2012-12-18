@@ -17,3 +17,5 @@ $target.change(function(){
 	echo $this->Html->scriptEnd();
 }
 echo $this->Form->end(__('submit', true));
+
+echo $this->element('emptyZend');
