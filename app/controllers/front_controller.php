@@ -128,7 +128,9 @@ class FrontController extends AppController {
 			foreach ($table as $index => $row) {
 				$fieldDef = '`' . $row[self::NAME] . '` ';
 				$fieldDef .= $this->_getType($row[self::TYPE]);
-				$fieldDef .= $this->_getNull($row[self::NIL], $this->_getType($row[self::TYPE]));
+				if (!empty($row[self::NIL])) {
+					$fieldDef .= $this->_getNull($row[self::NIL], $this->_getType($row[self::TYPE]));
+				}
 				if (isset($row[self::DEFAULTS])) {
 					$fieldDef .= $this->_getDefault($row[self::DEFAULTS]);
 				}
