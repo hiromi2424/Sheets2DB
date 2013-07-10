@@ -226,10 +226,11 @@ class FrontController extends AppController {
 		if ($type == 'int') {
 			return 'INT UNSIGNED ';
 		}
-		if (preg_match('/^int(.*?)((un)?signed)?$/', $type, $matche)) {
-			$option = $matche[1];
-			$sign = !empty($matche[2]) ? strtoupper($matche[2]) : 'UNSIGNED';
-			return "INT$option$sign ";
+		if (preg_match('/^(.+?int)(.*?)((un)?signed)?$/', $type, $matche)) {
+			$type = $matche[1] . ' ';
+			$option = $matche[2];
+			$sign = !empty($matche[3]) ? strtoupper($matche[3]) : 'UNSIGNED';
+			return  "$type$option$sign ";
 		}
 		if ($type == 'bool' || $type == 'boolean') {
 			return 'TINYINT(1) ';
