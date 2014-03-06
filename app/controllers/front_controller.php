@@ -226,7 +226,7 @@ class FrontController extends AppController {
 		if ($type == 'int') {
 			return 'INT UNSIGNED ';
 		}
-		if (preg_match('/^(.+?int)(.*?)((un)?signed)?$/', $type, $matche)) {
+		if (preg_match('/^(.*?int)(.*?)((un)?signed)?$/', $type, $matche)) {
 			$type = $matche[1] . ' ';
 			$option = $matche[2];
 			$sign = !empty($matche[3]) ? strtoupper($matche[3]) : 'UNSIGNED';
