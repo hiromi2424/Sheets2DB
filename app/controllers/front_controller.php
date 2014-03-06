@@ -282,7 +282,7 @@ class FrontController extends AppController {
 	}
 
 	function _getDefault($default) {
-		if (trim($default) == 'null') {
+		if (strtolower(trim($default)) == 'null') {
 			$default = 'NULL';
 		} elseif (!is_numeric($default)) {
 			$default = "'" . $default . "'";
