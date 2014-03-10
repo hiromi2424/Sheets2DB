@@ -235,6 +235,10 @@ class FrontController extends AppController {
 		if ($type == 'bool' || $type == 'boolean') {
 			return 'TINYINT(1) ';
 		}
+		if (preg_match('/string(\((.+)\))?/', $type, $matche)) {
+			$length = empty($matche[1]) ? 255 : $matche[2];
+			return "VARCHAR($length) ";
+		}
 		if (preg_match('/char\((.+?)\)/', $type, $matche)) {
 			$length = $matche[1];
 			return "VARCHAR($length) ";
